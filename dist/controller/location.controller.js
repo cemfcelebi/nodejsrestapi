@@ -15,30 +15,38 @@ const location_service_1 = require("../service/location.service");
 class LocationController {
     constructor() {
         this.get = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            res.send(this.locationService.get(req.params.location));
+            let location = yield this.locationService.get(req.params.locationName);
+            res.send(location);
         });
         this.getAll = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            res.send(this.locationService.getAll());
+            let locations = yield this.locationService.getAll();
+            res.send(locations);
         });
+        this.create = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let newLocation = req.body;
+            if (!newLocation || !newLocation.locationName) {
+                console.log("Bad Request");
+                return res.sendStatus(404);
+            }
+            let location = yield this.locationService.create(newLocation);
+            res.send(location);
+        });
+        this.update = (req, res) => {
+            res.send(this.locationService.update(req.body));
+        };
+        this.delete = (req, res) => {
+            res.send(this.locationService.delete(req.params.locationName));
+        };
         this.router = (0, express_1.Router)();
         this.locationService = new location_service_1.LocationService();
         this.routes();
     }
-    create(req, res) {
-        res.send(this.locationService.create());
-    }
-    update(req, res) {
-        res.send(this.locationService.update());
-    }
-    delete(req, res) {
-        res.send(this.locationService.delete());
-    }
     routes() {
-        this.router.get("/:id", this.get);
+        this.router.get("/:locationName", this.get);
         this.router.get("/", this.getAll);
         this.router.post("/", this.create);
-        this.router.put("/:id", this.update);
-        this.router.delete("/:id", this.delete);
+        this.router.put("/", this.update);
+        this.router.delete("/:locationName", this.delete);
     }
 }
 exports.LocationController = LocationController;

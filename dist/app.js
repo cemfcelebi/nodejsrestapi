@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
     database: "testdb",
     synchronize: true,
     entities: [location_model_1.Location],
-    name: "testdb"
+    name: "default"
 }).then((_connection) => {
     app.listen(port, () => {
         return console.log(`Express is listening at http://localhost:${port}`);

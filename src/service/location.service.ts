@@ -6,23 +6,23 @@ export class LocationService {
 
     }
 
-    public get = (locationName: string) => {
-        return getLocation(locationName);
+    public get = async (locationName: string) => {
+        return await getLocation(locationName);
     }
 
-    public getAll = () => {
-        return getLocations();
+    public getAll = async () => {
+        return await getLocations();
     }
 
-    public create = () => {
-        return "Create Item";
+    public create = async (payload: ILocationPayload) => {
+        return await createLocation(payload);
     }
 
-    public update = () => {
+    public update = (payload: ILocationPayload) => {
         return "Update Item";
     }
 
-    public delete = () => {
+    public delete = (locationName: string) => {
         return "Delete Item";
     }
 

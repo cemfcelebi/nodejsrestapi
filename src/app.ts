@@ -24,7 +24,7 @@ createConnection({
   database: "testdb",
   synchronize: true,
   entities: [Location],
-  name: "testdb"
+  name: "default"
 }).then((_connection) => {
   app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);

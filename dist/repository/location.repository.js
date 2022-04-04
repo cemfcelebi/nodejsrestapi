@@ -14,7 +14,8 @@ const typeorm_1 = require("typeorm");
 const location_model_1 = require("../model/location.model");
 const getLocations = () => __awaiter(void 0, void 0, void 0, function* () {
     const locationRepository = (0, typeorm_1.getRepository)(location_model_1.Location);
-    return locationRepository.find();
+    const locations = yield locationRepository.find();
+    return locations;
 });
 exports.getLocations = getLocations;
 const createLocation = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,8 +27,9 @@ exports.createLocation = createLocation;
 const getLocation = (locationName) => __awaiter(void 0, void 0, void 0, function* () {
     const locationRepository = (0, typeorm_1.getRepository)(location_model_1.Location);
     const location = yield locationRepository.findOne({ where: { locationName: locationName } });
-    if (!location)
+    if (!location) {
         return null;
+    }
     return location;
 });
 exports.getLocation = getLocation;

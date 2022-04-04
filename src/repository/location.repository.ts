@@ -11,7 +11,8 @@ export interface ILocationPayload {
 
 export const getLocations = async (): Promise<Array<Location>> => {
     const locationRepository = getRepository(Location);
-    return locationRepository.find();
+    const locations = await locationRepository.find();
+    return locations;
 };
 
 export const createLocation = async (payload: ILocationPayload): Promise<Location> => {
@@ -26,6 +27,9 @@ export const createLocation = async (payload: ILocationPayload): Promise<Locatio
 export const getLocation = async (locationName: string): Promise<Location | null> => {
     const locationRepository = getRepository(Location);
     const location = await locationRepository.findOne({ where: { locationName: locationName } });
-    if (!location) return null;
+    if (!location) {
+        return null;
+    }
+
     return location;
 };
