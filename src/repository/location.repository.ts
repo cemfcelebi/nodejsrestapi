@@ -1,5 +1,5 @@
 import { time } from "console";
-import { getRepository } from "typeorm";
+import { getRepository, Repository } from "typeorm";
 import { Location } from "../model/location.model"
 
 export interface ILocationPayload {
@@ -9,27 +9,40 @@ export interface ILocationPayload {
     utcOffset: number;
 }
 
-export const getLocations = async (): Promise<Array<Location>> => {
-    const locationRepository = getRepository(Location);
-    const locations = await locationRepository.find();
-    return locations;
-};
+export class LocationRepository {
 
-export const createLocation = async (payload: ILocationPayload): Promise<Location> => {
-    const locationRepository = getRepository(Location);
-    const location = new Location();
-    return locationRepository.save({
-        ...location,
-        ...payload,
-    });
-};
+    private locationRepository: Repository<Location>
 
-export const getLocation = async (locationName: string): Promise<Location | null> => {
-    const locationRepository = getRepository(Location);
-    const location = await locationRepository.findOne({ where: { locationName: locationName } });
-    if (!location) {
-        return null;
+    constructor() {
+        this.locationRepository = getRepository(Location);
     }
 
-    return location;
-};
+    public getLocations = async (): Promise<Array<Location>> => {
+        const locations = await this.locationRepository.find();
+        return locations;
+    };
+    
+    public createLocation = async (payload: ILocationPayload): Promise<Location> => {
+        const newLocation = this.locationRepository.create(payload);
+        return this.locationRepository.save(newLocation);
+    };
+    
+    public getLocation = async (locationName: string): Promise<Location | null> => {
+        const location = await this.locationRepository.findOne({ where: { locationName: locationName } });
+        if (!location) {
+            return null;
+        }
+    
+        return location;
+    };
+    
+    public deleteLocation = async (locationName: string) => {
+        await this.locationRepository.delete(locationName);
+    };
+    
+    public updateLocation = async (payload: Location): Promise<Location | null> => {
+        await this.locationRepository.update(payload.locationName, payload);        
+
+        return await this.getLocation(payload.locationName);
+    };
+}

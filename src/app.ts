@@ -5,15 +5,7 @@ import { createConnection } from 'typeorm';
 import { Location } from './model/location.model';
 
 const app = express();
-const locationController = new LocationController();
 const port = 3000;
-
-app.use(bodyParser.json());
-app.use("/api/locations", locationController.router);
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
 
 createConnection({
   type: "postgres",
@@ -32,4 +24,14 @@ createConnection({
 }).catch((err) => {
   console.log("Unable to connect to db", err);
   process.exit(1);
+});
+
+
+const locationController = new LocationController();
+
+app.use(bodyParser.json());
+app.use("/api/locations", locationController.router);
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });

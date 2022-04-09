@@ -9,28 +9,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLocation = exports.createLocation = exports.getLocations = void 0;
+exports.LocationRepository = void 0;
 const typeorm_1 = require("typeorm");
 const location_model_1 = require("../model/location.model");
-const getLocations = () => __awaiter(void 0, void 0, void 0, function* () {
-    const locationRepository = (0, typeorm_1.getRepository)(location_model_1.Location);
-    const locations = yield locationRepository.find();
-    return locations;
-});
-exports.getLocations = getLocations;
-const createLocation = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const locationRepository = (0, typeorm_1.getRepository)(location_model_1.Location);
-    const location = new location_model_1.Location();
-    return locationRepository.save(Object.assign(Object.assign({}, location), payload));
-});
-exports.createLocation = createLocation;
-const getLocation = (locationName) => __awaiter(void 0, void 0, void 0, function* () {
-    const locationRepository = (0, typeorm_1.getRepository)(location_model_1.Location);
-    const location = yield locationRepository.findOne({ where: { locationName: locationName } });
-    if (!location) {
-        return null;
+class LocationRepository {
+    constructor() {
+        this.getLocations = () => __awaiter(this, void 0, void 0, function* () {
+            const locations = yield this.locationRepository.find();
+            return locations;
+        });
+        this.createLocation = (payload) => __awaiter(this, void 0, void 0, function* () {
+            const newLocation = this.locationRepository.create(payload);
+            return this.locationRepository.save(newLocation);
+        });
+        this.getLocation = (locationName) => __awaiter(this, void 0, void 0, function* () {
+            const location = yield this.locationRepository.findOne({ where: { locationName: locationName } });
+            if (!location) {
+                return null;
+            }
+            return location;
+        });
+        this.deleteLocation = (locationName) => __awaiter(this, void 0, void 0, function* () {
+            yield this.locationRepository.delete(locationName);
+        });
+        this.updateLocation = (payload) => __awaiter(this, void 0, void 0, function* () {
+            yield this.locationRepository.update(payload.locationName, payload);
+            return yield this.getLocation(payload.locationName);
+        });
+        this.locationRepository = (0, typeorm_1.getRepository)(location_model_1.Location);
     }
-    return location;
-});
-exports.getLocation = getLocation;
+}
+exports.LocationRepository = LocationRepository;
 //# sourceMappingURL=location.repository.js.map

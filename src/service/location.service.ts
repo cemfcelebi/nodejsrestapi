@@ -1,29 +1,30 @@
-import { getLocation, getLocations, createLocation, ILocationPayload } from "../repository/location.repository";
+import { LocationRepository, ILocationPayload } from "../repository/location.repository";
 
 export class LocationService {
 
-    constructor() {
+    private locationRepository: LocationRepository
 
+    constructor() {
+        this.locationRepository = new LocationRepository();
     }
 
     public get = async (locationName: string) => {
-        return await getLocation(locationName);
+        return await this.locationRepository.getLocation(locationName);
     }
 
     public getAll = async () => {
-        return await getLocations();
+        return await this.locationRepository.getLocations();
     }
 
     public create = async (payload: ILocationPayload) => {
-        return await createLocation(payload);
+        return await this.locationRepository.createLocation(payload);
     }
 
-    public update = (payload: ILocationPayload) => {
-        return "Update Item";
+    public update = async (payload: ILocationPayload) => {
+        return await this.locationRepository.updateLocation(payload);
     }
 
-    public delete = (locationName: string) => {
-        return "Delete Item";
+    public delete = async (locationName: string) => {
+        return await this.locationRepository.deleteLocation(locationName);
     }
-
 }

@@ -32,13 +32,7 @@ const location_controller_1 = require("./controller/location.controller");
 const typeorm_1 = require("typeorm");
 const location_model_1 = require("./model/location.model");
 const app = (0, express_1.default)();
-const locationController = new location_controller_1.LocationController();
 const port = 3000;
-app.use(bodyParser.json());
-app.use("/api/locations", locationController.router);
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
 (0, typeorm_1.createConnection)({
     type: "postgres",
     host: "localhost",
@@ -56,5 +50,11 @@ app.get('/', (req, res) => {
 }).catch((err) => {
     console.log("Unable to connect to db", err);
     process.exit(1);
+});
+const locationController = new location_controller_1.LocationController();
+app.use(bodyParser.json());
+app.use("/api/locations", locationController.router);
+app.get('/', (req, res) => {
+    res.send('Hello World!');
 });
 //# sourceMappingURL=app.js.map

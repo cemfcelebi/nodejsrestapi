@@ -14,20 +14,21 @@ const location_repository_1 = require("../repository/location.repository");
 class LocationService {
     constructor() {
         this.get = (locationName) => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, location_repository_1.getLocation)(locationName);
+            return yield this.locationRepository.getLocation(locationName);
         });
         this.getAll = () => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, location_repository_1.getLocations)();
+            return yield this.locationRepository.getLocations();
         });
         this.create = (payload) => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, location_repository_1.createLocation)(payload);
+            return yield this.locationRepository.createLocation(payload);
         });
-        this.update = (payload) => {
-            return "Update Item";
-        };
-        this.delete = (locationName) => {
-            return "Delete Item";
-        };
+        this.update = (payload) => __awaiter(this, void 0, void 0, function* () {
+            return yield this.locationRepository.updateLocation(payload);
+        });
+        this.delete = (locationName) => __awaiter(this, void 0, void 0, function* () {
+            return yield this.locationRepository.deleteLocation(locationName);
+        });
+        this.locationRepository = new location_repository_1.LocationRepository();
     }
 }
 exports.LocationService = LocationService;
