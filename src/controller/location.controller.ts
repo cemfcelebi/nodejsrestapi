@@ -1,6 +1,7 @@
 import { Router, Response, Request } from "express";
 import { ILocationPayload } from "../repository/location.repository";
 import { LocationService } from "../service/location.service";
+import { HttpStatus } from "../enum/httpStatus";
 
 export class LocationController {
 
@@ -16,7 +17,7 @@ export class LocationController {
     public get = async (req: Request, res: Response) => {
         let location = await this.locationService.get(req.params.locationName);
         if(!location) {
-            return 
+            return res.sendStatus(HttpStatus.NotFound);
         }
 
         res.send(location);
@@ -31,26 +32,29 @@ export class LocationController {
     public create = async (req: Request, res: Response) => {
         let newLocation = req.body as ILocationPayload;
         if(!newLocation || !newLocation.locationName) {
-            return res.sendStatus(400);
+            return res.sendStatus(HttpStatus.BadRequest);
         }
 
-        let location = await this.locationService.create(newLocation); 
+        let location = await this.locationService.create(newLocation);
+        if (!location) {
+            return res.sendStatus(HttpStatus.AlreadyExist);
+        }
         
-        res.send(location);
+        res.status(HttpStatus.Created).send(location);
     }
 
     public update = async (req: Request, res: Response) => {
+        //checking ViewModel 
         let updatedLocation = req.body as ILocationPayload;
         if(!updatedLocation || !updatedLocation.locationName) {
-            return res.sendStatus(400);
+            return res.sendStatus(HttpStatus.BadRequest);
         }
 
-        let currentlocation = await this.locationService.get(updatedLocation.locationName);
-        if (!currentlocation) {
-            return res.sendStatus(404);
-        }
-
+        //
         let location = await this.locationService.update(updatedLocation);
+        if (!location) {
+            return res.sendStatus(HttpStatus.NotFound)
+        }
         
         res.send(location);
     }
@@ -58,12 +62,12 @@ export class LocationController {
     public delete = async (req: Request, res: Response) => {
         let location = await this.locationService.get(req.params.locationName);
         if(!location) {
-            return res.sendStatus(404);
+            return res.sendStatus(HttpStatus.NotFound);
         }
 
-        this.locationService.delete(location.locationName);
+        await this.locationService.delete(location.locationName);
         
-        res.sendStatus(200);
+        res.sendStatus(HttpStatus.Ok);
     }
 
     public routes() {

@@ -52,6 +52,7 @@ const port = 3000;
     process.exit(1);
 });
 const locationController = new location_controller_1.LocationController();
+//MVC
 app.use(bodyParser.json());
 app.use("/api/locations", locationController.router);
 app.get('/', (req, res) => {

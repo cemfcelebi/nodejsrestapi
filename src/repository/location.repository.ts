@@ -18,8 +18,7 @@ export class LocationRepository {
     }
 
     public getLocations = async (): Promise<Array<Location>> => {
-        const locations = await this.locationRepository.find();
-        return locations;
+        return this.locationRepository.find();
     };
     
     public createLocation = async (payload: ILocationPayload): Promise<Location> => {
@@ -28,21 +27,16 @@ export class LocationRepository {
     };
     
     public getLocation = async (locationName: string): Promise<Location | null> => {
-        const location = await this.locationRepository.findOne({ where: { locationName: locationName } });
-        if (!location) {
-            return null;
-        }
-    
-        return location;
+        return this.locationRepository.findOne({ where: { locationName: locationName } });
     };
     
     public deleteLocation = async (locationName: string) => {
-        await this.locationRepository.delete(locationName);
+        return this.locationRepository.delete(locationName);
     };
     
-    public updateLocation = async (payload: Location): Promise<Location | null> => {
-        await this.locationRepository.update(payload.locationName, payload);        
-
-        return await this.getLocation(payload.locationName);
+    public updateLocation = async (payload: Location): Promise<Location> => {
+        return this.locationRepository.update(payload.locationName, payload).then(() => {
+            return this.getLocation(payload.locationName);
+        });        
     };
 }

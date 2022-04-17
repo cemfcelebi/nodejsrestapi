@@ -15,26 +15,22 @@ const location_model_1 = require("../model/location.model");
 class LocationRepository {
     constructor() {
         this.getLocations = () => __awaiter(this, void 0, void 0, function* () {
-            const locations = yield this.locationRepository.find();
-            return locations;
+            return this.locationRepository.find();
         });
         this.createLocation = (payload) => __awaiter(this, void 0, void 0, function* () {
             const newLocation = this.locationRepository.create(payload);
             return this.locationRepository.save(newLocation);
         });
         this.getLocation = (locationName) => __awaiter(this, void 0, void 0, function* () {
-            const location = yield this.locationRepository.findOne({ where: { locationName: locationName } });
-            if (!location) {
-                return null;
-            }
-            return location;
+            return this.locationRepository.findOne({ where: { locationName: locationName } });
         });
         this.deleteLocation = (locationName) => __awaiter(this, void 0, void 0, function* () {
-            yield this.locationRepository.delete(locationName);
+            return this.locationRepository.delete(locationName);
         });
         this.updateLocation = (payload) => __awaiter(this, void 0, void 0, function* () {
-            yield this.locationRepository.update(payload.locationName, payload);
-            return yield this.getLocation(payload.locationName);
+            return this.locationRepository.update(payload.locationName, payload).then(() => {
+                return this.getLocation(payload.locationName);
+            });
         });
         this.locationRepository = (0, typeorm_1.getRepository)(location_model_1.Location);
     }

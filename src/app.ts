@@ -26,9 +26,9 @@ createConnection({
   process.exit(1);
 });
 
-
 const locationController = new LocationController();
 
+//MVC
 app.use(bodyParser.json());
 app.use("/api/locations", locationController.router);
 

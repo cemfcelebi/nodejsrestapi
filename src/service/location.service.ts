@@ -9,22 +9,30 @@ export class LocationService {
     }
 
     public get = async (locationName: string) => {
-        return await this.locationRepository.getLocation(locationName);
+        return this.locationRepository.getLocation(locationName);
     }
 
     public getAll = async () => {
-        return await this.locationRepository.getLocations();
+        return this.locationRepository.getLocations();
     }
 
     public create = async (payload: ILocationPayload) => {
-        return await this.locationRepository.createLocation(payload);
+        return this.get(payload.locationName).then(currentlocation => {
+            if (!currentlocation) {
+                return this.locationRepository.createLocation(payload);
+            }
+        });
     }
 
     public update = async (payload: ILocationPayload) => {
-        return await this.locationRepository.updateLocation(payload);
+        return this.get(payload.locationName).then(currentlocation => {
+            if (currentlocation) {
+                return this.locationRepository.updateLocation(payload);
+            }
+        });
     }
 
     public delete = async (locationName: string) => {
-        return await this.locationRepository.deleteLocation(locationName);
+        return this.locationRepository.deleteLocation(locationName);
     }
 }
